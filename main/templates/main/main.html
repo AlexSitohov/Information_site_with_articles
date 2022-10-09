@@ -1,0 +1,30 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+    <div class="wrapper">
+        {% for article in articles %}
+
+
+        <div class="item">
+            <div class="card" style="width: 28rem;">
+                <img src="{{ article.image.url }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text">
+                    <h2>{{article.title}}</h2> <br>
+                    {{article.text | truncatewords:30}}
+                    </p>
+
+                    <a href="{% url 'article' article.id %}" class="btn btn-outline-success">
+                        Читать
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

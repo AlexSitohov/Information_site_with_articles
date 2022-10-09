@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+<div class="main-div">
+    <div class="article-wrapper">
+
+        <h1>{{article.title}}</h1>
+        <p>
+            {{article.text}}
+        </p>
+        {% for comment in comments %}
+        <p>
+            {{comment.comment_author}}: {{comment}} - {{comment.date}}
+        </p>
+
+        {% endfor %}
+        {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="text_of_comment">
+            <button class="btn btn-outline-success" type="submit">Комментировать</button>
+        </form>
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+{% endblock %}

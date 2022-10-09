@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+<form class="form_create" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button class="btn btn-outline-success" type="submit">Зарегистрироваться</button>
+
+</form>
+
+{% endblock %}
