@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 
-from main.models import Comment
+from main.models import *
 
 
 class CreateUserForm(UserCreationForm):
@@ -27,3 +27,15 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ('text_of_comment',)
+
+
+class ArticleForm(ModelForm):
+    title = forms.CharField(label='Заголовок', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    text = forms.CharField(label='Текст статьи', widget=forms.Textarea(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Article
+        fields = ('title', 'text', 'image','tag')
+        widgets = {
+            'tag': forms.CheckboxSelectMultiple(),
+        }

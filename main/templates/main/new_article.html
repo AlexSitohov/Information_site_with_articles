@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+ <form class="form_create" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <!-- Input:Text -->
+                <div class="form__field">
+                    <label>{{field.label}}</label>
+                    {{field}}
+                </div>
+                {% endfor %}
+
+
+                    <button class="btn btn-outline-success" type="submit">Отправить статью на проверку</button>
+
+            </form>
+
+{% endblock %}

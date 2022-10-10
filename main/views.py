@@ -9,11 +9,11 @@ from main.models import *
 def main_view(request):
     if request.method == 'GET' and request.GET.get('search'):
         data = request.GET
-        articles = Article.objects.filter(status=True, title__icontains=data.get('search'))
+        articles = Article.objects.filter(status=True, title__icontains=data.get('search')).order_by('-date')
         context = {'articles': articles}
         return render(request, 'main/main.html', context)
     else:
-        articles = Article.objects.filter(status=True, )
+        articles = Article.objects.filter(status=True, ).order_by('-date')
         context = {'articles': articles}
         return render(request, 'main/main.html', context)
 
@@ -37,6 +37,7 @@ def article_view(request, pk):
         return render(request, 'main/article.html', context)
     else:
         return HttpResponse('Статья недоступна')
+
 
 def registration_view(request):
     if not request.user.is_authenticated:
@@ -76,3 +77,30 @@ def logout_view(request):
     if request.user.is_authenticated:
         logout(request)
         return redirect('main')
+
+
+def new_article_view(request):
+    if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', " ").split()
+        form = ArticleForm(request.POST, request.FILES)
+        if form.is_valid():
+            article = form.save()
+            article.author = request.user
+            article.save()
+
+            # article = Article.objects.create(title=form.cleaned_data['title'],
+            #                                  text=form.cleaned_data['text'],
+            #                                  image=form.cleaned_data['image'],
+            #                                  author=request.user,
+            #                                  status=False)
+            #
+            # article.save()
+            # for tag in newtags:
+            #     tag, created = Tag.objects.get_or_create(name_of_tag=tag)
+            #     article.tag.add(tag)
+
+            return redirect('main')
+    else:
+        form = ArticleForm()
+        context = {'form': form}
+        return render(request, 'main/new_article.html', context)

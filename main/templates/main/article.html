@@ -9,6 +9,12 @@
         <p>
             {{article.text}}
         </p>
+        <P>
+            {{article.date}}
+        </P>
+        <P>
+            {{article.author}}
+        </P>
         {% for comment in comments %}
         <p>
             {{comment.comment_author}}: {{comment}} - {{comment.date}}
@@ -18,7 +24,7 @@
         {% if user.is_authenticated %}
         <form method="post">
             {% csrf_token %}
-            <input type="text" name="text_of_comment">
+            <input class="form-control" type="text" name="text_of_comment">
             <button class="btn btn-outline-success" type="submit">Комментировать</button>
         </form>
         {% endif %}
