@@ -81,22 +81,23 @@ def logout_view(request):
 
 def new_article_view(request):
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', " ").split()
         form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
-            article = form.save()
-            article.author = request.user
-            article.save()
-
-            # article = Article.objects.create(title=form.cleaned_data['title'],
-            #                                  text=form.cleaned_data['text'],
-            #                                  image=form.cleaned_data['image'],
-            #                                  author=request.user,
-            #                                  status=False)
-            #
+            # article = form.save()
+            # article.author = request.user
             # article.save()
-            # for tag in newtags:
-            #     tag, created = Tag.objects.get_or_create(name_of_tag=tag)
-            #     article.tag.add(tag)
+
+            article = Article.objects.create(title=form.cleaned_data['title'],
+                                             text=form.cleaned_data['text'],
+                                             image=form.cleaned_data['image'],
+                                             author=request.user,
+                                             status=False)
+
+            article.save()
+            for tag in newtags[:5]:
+                tag, created = Tag.objects.get_or_create(name_of_tag=tag)
+                article.tag.add(tag)
 
             return redirect('main')
     else:
@@ -106,6 +107,6 @@ def new_article_view(request):
 
 
 def my_articles_view(request):
-    articles = Article.objects.filter(author=request.user).order_by('-date')
+    articles = Article.objects.filter(author=request.user).order_by('-status', '-date')
     context = {'articles': articles}
     return render(request, 'main/my_articles.html', context)

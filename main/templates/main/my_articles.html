@@ -3,32 +3,66 @@
 
 {% block content %}
 
-    <div class="wrapper">
-        <div class="list">
+<div class="wrapper">
+    <div class="list">
 
 
         {% for article in articles %}
 
 
         <div class="item">
-            <div class="card" style="width: 30rem;">
+            <div class="card" style="width: 35rem;">
                 <img src="{{ article.image.url }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <p class="card-text">
-                    <h2>{{article.title}}</h2> <br>
-                    {{article.text | truncatewords:30}}
-                    </p>
+                    <h2>{{article.title}}</h2>
 
-                    <a href="{% url 'article' article.id %}" class="btn btn-outline-success">
-                        Читать
-                    </a>
+
+                    <div class="tag-div">
+
+                        {% for tg in article.tag.all %}
+                        <div class="tag-wrapper">
+                            <small>{{tg}}</small>
+                        </div>
+
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="article-text-main">
+                        {{article.text | truncatewords:30}}
+                    </div>
+
+                    </p>
+                    <div class="article-nav">
+                        <div class="button-article-main">
+                            {% if article.status %}
+                            <a href="{% url 'article' article.id %}"
+                               class="btn btn-outline-success">
+                                Читать
+                            </a>
+                            {% else %}
+                            На проверке
+                            {% endif %}
+                        </div>
+                        <div class="date-div">
+                            {{article.date|date:"d.n.y в H:i"}}
+                        </div>
+                        <div class="author-div">
+                            By {{article.author}}
+                        </div>
+
+
+                    </div>
+
 
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
-        </div>
+</div>
 
 
 {% endblock %}

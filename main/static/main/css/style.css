@@ -110,7 +110,7 @@ img{
 
 
 .main-div {
-    margin: 100px 0 0 0;
+    margin: 80px 0 0 0;
 }
 
 .wrapper {
@@ -129,8 +129,8 @@ img{
 
 .item {
     min-height: 300px;
-    max-height: 600px;
-    text-align: center;
+    max-height: 700px;
+    /*text-align: center;*/
     font-size: 1.1em;
     padding: 1.3em;
     display: flex;
@@ -138,16 +138,25 @@ img{
     justify-content: center;
   }
 
+.item h2,h1 {
+    text-align: center;
+    font-size:40px;
+}
+.card .btn-outline-success {
+
+}
+
 .card-img-top {
     overflow: hidden;
     object-fit: contain;
 }
 
 .article-wrapper {
-    max-width:600px;
+    max-width:1000px;
     width: 100%;
     margin: 0px auto 0 auto;
     padding: 20px;
+    padding-top: 0;
 
 }
 
@@ -165,7 +174,7 @@ img{
 
 }
 
-@media (min-width: 2100px) {
+@media (min-width: 2400px) {
     .list{
         grid-template-columns: 1fr 1fr 1fr 1fr;
         justify-content: center;
@@ -173,13 +182,13 @@ img{
 }
 
 
-@media (max-width: 1050px) {
+@media (max-width: 1250px) {
     .list{
         grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
     .list {
         grid-template-columns: 320px;
         justify-content: center;
@@ -196,4 +205,47 @@ img{
 
 input{
     height:40px;
+}
+
+
+.article-nav {
+    margin: 10px 0 5px 0;
+    display:flex;
+    justify-content: space-around;
+    font-size:20px;
+    align-items: center
+}
+
+
+.card .article-nav {
+    margin-bottom:10px;
+}
+
+
+.comments {
+    margin-top:20px;
+}
+
+.comments p {
+    margin-bottom:10px;
+}
+
+
+.form-comment{
+    margin-top:30px;
+    padding-bottom:100px;
+}
+
+
+.offcanvas-body {
+    padding-top:0;
+}
+
+
+.tag-div {
+    margin: 5px 0 5px 0;
+    display:flex;
+    justify-content: space-around;
+    font-size:20px;
+
 }

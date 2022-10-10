@@ -1,7 +1,6 @@
 <nav class="navbar bg-light fixed-top">
     <div class="container-fluid">
         <a style="font-size:25px;" class="navbar-brand" href="{% url 'main' %}">Главная страница</a>
-        <h5 style="font-size:20px;">Добрый день {{ user }}!</h5>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar">
@@ -9,7 +8,9 @@
         </button>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">{{ user }}</h5>
+                {% if user.is_authenticated %}
+                <h5 style="font-size:20px;">Добрый день {{ user }}!</h5>
+                {% endif %}
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">

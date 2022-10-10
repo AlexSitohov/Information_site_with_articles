@@ -5,29 +5,54 @@
 
 <div class="item">
     <div class="article-wrapper">
-
         <h1 style="font-size:40px;">{{article.title}}</h1>
-        <p>
+        <div class="article-nav">
+            <div class="date-div">
+                {{article.date|date:"d.n.y в H:i"}}
+            </div>
+            <div class="author-div">
+                By {{article.author}}
+            </div>
+            <div class="author-div">
+
+                {% for tg in article.tag.all %}
+
+                <small>{{tg}}</small>
+
+                {% endfor %}
+
+            </div>
+
+
+        </div>
+        <img src="{{ article.image.url }}" class="card-img-top" alt="...">
+        <p style="margin-top:15px;">
             {{article.text}}
-        </p>
-        <P>
-            {{article.date}}
-        </P>
-        <P>
-            {{article.author}}
-        </P>
-        {% for comment in comments %}
-        <p>
-            <b>{{comment.comment_author}}</b>: {{comment}} - {{comment.date}}
+
         </p>
 
-        {% endfor %}
+        <div class="comments">
+            <p style="margin-top:10px; font-size:20px;">
+                Комментарии:
+            </p>
+            {% for comment in comments %}
+            <p>
+                <b>{{comment.comment_author}} </b> {{comment.date|date:"d.n.y в H:i"}} <br> {{comment}}
+            </p>
+            {% endfor %}
+        </div>
+
+
         {% if user.is_authenticated %}
-        <form method="post">
+
+        <form method="post" class="form-comment">
             {% csrf_token %}
-            <input class="form-control" type="text" name="text_of_comment">
+            <input style="margin-bottom:15px;" class="form-control" type="text" name="text_of_comment"
+                   placeholder="Ваш комментарий">
             <button class="btn btn-outline-success" type="submit">Комментировать</button>
         </form>
+
+
         {% endif %}
 
     </div>

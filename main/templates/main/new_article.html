@@ -4,20 +4,25 @@
 {% block content %}
 
 
- <form class="form_create" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+<form class="form_create" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
 
-                {% for field in form %}
-                <!-- Input:Text -->
-                <div class="form__field">
-                    <label>{{field.label}}</label>
-                    {{field}}
-                </div>
-                {% endfor %}
+    {% for field in form %}
+    <!-- Input:Text -->
+    <div class="form__field">
+        <label>{{field.label}}</label>
+        {{field}}
+    </div>
+
+    {% endfor %}
+    <div class="form__field">
+        <label>Теги</label>
+        <input class="form-control" type="text" name="newtags" placeholder="Добавьте свои теги через пробел"/>
+    </div>
 
 
-                    <button class="btn btn-outline-success" type="submit">Отправить статью на проверку</button>
+    <button class="btn btn-outline-success" type="submit">Отправить статью на проверку</button>
 
-            </form>
+</form>
 
 {% endblock %}
