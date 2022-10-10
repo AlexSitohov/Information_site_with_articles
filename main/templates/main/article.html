@@ -2,10 +2,11 @@
 
 
 {% block content %}
-<div class="main-div">
+
+<div class="item">
     <div class="article-wrapper">
 
-        <h1>{{article.title}}</h1>
+        <h1 style="font-size:40px;">{{article.title}}</h1>
         <p>
             {{article.text}}
         </p>
@@ -17,7 +18,7 @@
         </P>
         {% for comment in comments %}
         <p>
-            {{comment.comment_author}}: {{comment}} - {{comment.date}}
+            <b>{{comment.comment_author}}</b>: {{comment}} - {{comment.date}}
         </p>
 
         {% endfor %}
@@ -30,7 +31,6 @@
         {% endif %}
 
     </div>
-
 
 </div>
 

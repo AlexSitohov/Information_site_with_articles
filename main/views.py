@@ -36,7 +36,7 @@ def article_view(request, pk):
             context = {'article': article, 'comments': comments, 'form': form}
         return render(request, 'main/article.html', context)
     else:
-        return HttpResponse('Статья недоступна')
+        return HttpResponse('Статья еще не прошла проверку...')
 
 
 def registration_view(request):
@@ -81,7 +81,6 @@ def logout_view(request):
 
 def new_article_view(request):
     if request.method == 'POST':
-        newtags = request.POST.get('newtags').replace(',', " ").split()
         form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
             article = form.save()
@@ -104,3 +103,9 @@ def new_article_view(request):
         form = ArticleForm()
         context = {'form': form}
         return render(request, 'main/new_article.html', context)
+
+
+def my_articles_view(request):
+    articles = Article.objects.filter(author=request.user).order_by('-date')
+    context = {'articles': articles}
+    return render(request, 'main/my_articles.html', context)

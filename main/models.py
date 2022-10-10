@@ -6,7 +6,7 @@ from django.db.models import *
 class Article(Model):
     title = CharField(max_length=50, verbose_name='Заголовок')
     text = TextField(verbose_name='Текст статьи')
-    author = ForeignKey(User, on_delete=CASCADE, verbose_name='Автор')
+    author = ForeignKey(User, on_delete=CASCADE, verbose_name='Автор', null=True, blank=True)
     image = ImageField(verbose_name='Картинка')
     date = DateTimeField(auto_now_add=True, verbose_name='Дата написания статьи')
     status = BooleanField(default=False, verbose_name='Статус статьи')

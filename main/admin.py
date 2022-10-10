@@ -5,7 +5,9 @@ from main.models import *
 
 @register(Article)
 class ArticleAdmin(ModelAdmin):
-    pass
+    list_display = ('id', 'title', 'author', 'image', 'date', 'status',)
+    list_display_links = ('title',)
+    list_editable = ('status',)
 
 
 @register(Tag)
