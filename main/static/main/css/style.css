@@ -64,7 +64,8 @@ body {
 	min-height:100%;
 }
 a, a:visited { /* порядок правил для ссылок имеет значение */
-	color: #e6618c;
+
+
 	text-decoration: underline;
 }
 a:hover {
@@ -72,8 +73,8 @@ a:hover {
 	text-decoration:none;
 }
 a:focus, a:active {
-	color: #c83867;
-	text-decoration: underline;
+
+
 }
 h1, h2, h3, h4, h5, h6{
 	font-weight:normal;
@@ -232,7 +233,7 @@ input{
 
 
 .form-comment{
-    margin-top:30px;
+    margin-top:20px;
     padding-bottom:100px;
 }
 
@@ -262,4 +263,30 @@ input{
     display:flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+
+
+.navbar a{
+    color: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;
+}
+
+
+.bg-light {
+    background-color: RGBA(255,255,255,0.8)!important;
+}
+
+.alert-warning {
+    --bs-alert-color: RGBA(255,255,255,0.8)!important;
+    --bs-alert-bg: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;
+    --bs-alert-border-color: RGBA(255,255,255)!important;
+}
+
+.alert {
+    width:500px;
+
+}
+.alert-wrapper {
+    display:flex;
+    justify-content: space-around;
 }

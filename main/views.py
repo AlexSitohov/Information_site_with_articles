@@ -56,7 +56,7 @@ def registration_view(request):
             if form.is_valid():
                 user = form.save()
                 login(request, user)
-                messages.success(request, 'Вы успешно зарегистрировались.')
+                messages.success(request, 'вы успешно зарегистрировались')
                 return redirect('main')
         else:
             form = CreateUserForm()
@@ -74,7 +74,7 @@ def login_view(request):
             if form.is_valid():
                 user = form.get_user()
                 login(request, user)
-                messages.success(request, 'Вы успешно вошли.')
+                messages.success(request, 'вы успешно вошли')
 
                 return redirect('main')
         else:
@@ -111,7 +111,7 @@ def new_article_view(request):
             for tag in newtags[:5]:
                 tag, created = Tag.objects.get_or_create(name_of_tag=tag)
                 article.tag.add(tag)
-            messages.success(request, 'Ваша статья отправлена на проверку.')
+            messages.success(request, 'ваша статья отправлена на проверку')
 
             return redirect('main')
     else:
