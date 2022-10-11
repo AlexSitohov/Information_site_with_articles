@@ -3,6 +3,7 @@
 
 {% block content %}
 
+
 <div class="wrapper">
     <div class="list">
 
@@ -14,27 +15,33 @@
             <div class="card" style="width: 35rem;">
                 <img src="{{ article.image.url }}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <p class="card-text">
-                    <h2>{{article.title}}</h2>
+                    <div class="tags-title-text-div">
+                        <h2>{{article.title}}</h2>
 
 
-                    <div class="tag-div">
+                        <div class="tag-div">
 
-                        {% for tg in article.tag.all %}
-                        <div class="tag-wrapper">
-                            <small>{{tg}}</small>
+                            {% for tg in article.tag.all %}
+                            <div class="tag-wrapper">
+                                <small>
+                                    <span class="badge text-bg-success">{{tg}}</span>
+
+                                </small>
+                            </div>
+
+
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="article-text-main">
+                            {{article.text | truncatewords:30}}
                         </div>
 
 
-                        {% endfor %}
-
                     </div>
 
-                    <div class="article-text-main">
-                        {{article.text | truncatewords:30}}
-                    </div>
 
-                    </p>
                     <div class="article-nav">
                         <div class="button-article-main">
                             <a href="{% url 'article' article.id %}"
@@ -57,6 +64,7 @@
             </div>
         </div>
         {% endfor %}
+
     </div>
 </div>
 

@@ -18,9 +18,49 @@
 </header>
 
 <div class="main-div">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{user}}</strong> {{message}}.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
     {% block content %}
 
     {% endblock %}
+    <div class="pagination-div">
+        <nav style="text-align: center;" aria-label="Page navigation example">
+            <ul class="pagination">
+
+                {% if articles.paginator.page_range|length > 1 %}
+
+
+                {% if search_articles %}
+
+                {% for p in articles.paginator.page_range %}
+                <li class="page-item"><a class="page-link" href="?search={{search_articles}}&page={{p}}">{{p}}</a></li>
+                {% endfor %}
+
+
+                {% else %}
+
+                {% for p in articles.paginator.page_range %}
+                <li class="page-item"><a class="page-link" href="?page={{p}}">{{p}}</a></li>
+                {% endfor %}
+
+                {% endif %}
+
+                {% else %}
+
+                {% endif %}
+
+
+            </ul>
+        </nav>
+
+    </div>
 </div>
 
 <footer>

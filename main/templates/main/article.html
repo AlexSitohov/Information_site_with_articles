@@ -13,15 +13,21 @@
             <div class="author-div">
                 By {{article.author}}
             </div>
-            <div class="author-div">
+            {% if article.tag.all %}
+            <div>
+
 
                 {% for tg in article.tag.all %}
 
-                <small>{{tg}}</small>
+                <small>
+                    <span class="badge text-bg-success">{{tg}}</span>
+                </small>
 
                 {% endfor %}
 
+
             </div>
+            {% endif %}
 
 
         </div>
@@ -47,7 +53,7 @@
 
         <form method="post" class="form-comment">
             {% csrf_token %}
-            <input style="margin-bottom:15px;" class="form-control" type="text" name="text_of_comment"
+            <input style="margin-bottom:10px;" class="form-control" type="text" name="text_of_comment"
                    placeholder="Ваш комментарий">
             <button class="btn btn-outline-success" type="submit">Комментировать</button>
         </form>

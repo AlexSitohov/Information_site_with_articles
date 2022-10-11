@@ -1,4 +1,6 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -9,11 +11,19 @@ from main.models import *
 def main_view(request):
     if request.method == 'GET' and request.GET.get('search'):
         data = request.GET
-        articles = Article.objects.filter(status=True, title__icontains=data.get('search')).order_by('-date')
-        context = {'articles': articles}
+        articles_list = Article.objects.filter(status=True, title__icontains=data.get('search')).order_by('-date')
+        paginator = Paginator(articles_list, 10)
+        search_articles = request.GET.get('search')
+        page_number = request.GET.get('page')
+        articles = paginator.get_page(page_number)
+        context = {'articles': articles, 'search_articles': search_articles}
         return render(request, 'main/main.html', context)
     else:
-        articles = Article.objects.filter(status=True, ).order_by('-date')
+        articles_list = Article.objects.filter(status=True, ).order_by('-date')
+        paginator = Paginator(articles_list, 10)
+
+        page_number = request.GET.get('page')
+        articles = paginator.get_page(page_number)
         context = {'articles': articles}
         return render(request, 'main/main.html', context)
 
@@ -46,6 +56,7 @@ def registration_view(request):
             if form.is_valid():
                 user = form.save()
                 login(request, user)
+                messages.success(request, 'Вы успешно зарегистрировались.')
                 return redirect('main')
         else:
             form = CreateUserForm()
@@ -63,6 +74,8 @@ def login_view(request):
             if form.is_valid():
                 user = form.get_user()
                 login(request, user)
+                messages.success(request, 'Вы успешно вошли.')
+
                 return redirect('main')
         else:
             form = UserLoginForm()
@@ -98,6 +111,7 @@ def new_article_view(request):
             for tag in newtags[:5]:
                 tag, created = Tag.objects.get_or_create(name_of_tag=tag)
                 article.tag.add(tag)
+            messages.success(request, 'Ваша статья отправлена на проверку.')
 
             return redirect('main')
     else:
@@ -107,6 +121,10 @@ def new_article_view(request):
 
 
 def my_articles_view(request):
-    articles = Article.objects.filter(author=request.user).order_by('-status', '-date')
+    articles_list = Article.objects.filter(author=request.user).order_by('-status', '-date')
+    paginator = Paginator(articles_list, 10)
+
+    page_number = request.GET.get('page')
+    articles = paginator.get_page(page_number)
     context = {'articles': articles}
     return render(request, 'main/my_articles.html', context)

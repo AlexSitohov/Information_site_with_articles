@@ -249,3 +249,17 @@ input{
     font-size:20px;
 
 }
+
+
+.pagination-div {
+    display:flex;
+    justify-content: space-around;
+    margin:0 auto 50px auto;
+}
+
+
+.card-body {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
