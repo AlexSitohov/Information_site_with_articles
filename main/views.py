@@ -94,7 +94,7 @@ def logout_view(request):
 
 def new_article_view(request):
     if request.method == 'POST':
-        newtags = request.POST.get('newtags').replace(',', " ").split()
+        newtags = request.POST.get('newtags').split(',')
         form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
             # article = form.save()
@@ -128,3 +128,33 @@ def my_articles_view(request):
     articles = paginator.get_page(page_number)
     context = {'articles': articles}
     return render(request, 'main/my_articles.html', context)
+
+
+def edit_article_view(request, pk):
+    article = Article.objects.get(id=pk)
+    if article.author == request.user:
+        if request.method == 'POST':
+            newtags = request.POST.get('newtags').split(',')
+            form = ArticleForm(request.POST, request.FILES)
+            if form.is_valid():
+
+                article.title = form.cleaned_data['title']
+                article.text = form.cleaned_data['text']
+                article.image = form.cleaned_data['image']
+                article.status = False
+
+                article.save()
+                for tag in newtags[:5]:
+                    tag, created = Tag.objects.get_or_create(name_of_tag=tag)
+                    article.tag.add(tag)
+                messages.success(request, 'ваша статья обновлена и отправлена на проверку')
+
+                return redirect('main')
+        else:
+            form = ArticleForm()
+            tg = ''
+            for t in article.tag.all():
+                tg += str(t) + ' '
+
+            context = {'form': form, 'article': article, 'tg': tg}
+            return render(request, 'main/edit_article.html', context)

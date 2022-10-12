@@ -44,10 +44,11 @@
                     <div class="article-nav">
                         <div class="button-article-main">
                             {% if article.status %}
-                            <a href="{% url 'article' article.id %}"
-                               class="btn btn-outline-success">
-                                Читать
-                            </a>
+
+
+                            <a class="btn btn-outline-success"
+                               href="{% url 'edit_article' article.id %}">Редактировать</a>
+
                             {% else %}
                             На проверке
                             {% endif %}

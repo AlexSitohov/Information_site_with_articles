@@ -1,0 +1,38 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+<form class="form_create" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+
+    <!-- Input:Text -->
+    <div class="form__field">
+        <label>Заголовок</label>
+        <input class="form-control" type="text" value="{{article.title}}" name="title"/>
+    </div>
+    <div class="form__field">
+        <label>Текст статьи</label>
+        <textarea class="form-control" name="text" cols="30" rows="10">{{article.text}}</textarea>
+    </div>
+    <div class="form__field">
+        <label>Картинка</label>
+        <input type="file" name="image" accept="image/*" required="" id="id_image">
+    </div>
+
+
+    <div class="form__field">
+        <label>Теги</label>
+        <input class="form-control" type="text" name="newtags"
+               placeholder="Добавьте свои теги через запятую"
+               value="{{tg}}"/>
+    </div>
+
+
+    <button class="btn btn-outline-success" type="submit">Обновить и отправить статью на проверку</button>
+
+</form>
+
+{% endblock %}

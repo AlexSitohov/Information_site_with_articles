@@ -10,4 +10,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('new_article/', new_article_view, name='new_article'),
     path('my_articles/', my_articles_view, name='my_articles'),
+    path('edit_article/<int:pk>/', edit_article_view, name='edit_article'),
 ]
