@@ -11,4 +11,7 @@ urlpatterns = [
     path('new_article/', new_article_view, name='new_article'),
     path('my_articles/', my_articles_view, name='my_articles'),
     path('edit_article/<int:pk>/', edit_article_view, name='edit_article'),
+    path('delete_article_check/<int:pk>/', delete_article_check_view, name='delete_article_check'),
+    path('delete_article/<int:pk>/', delete_article_view, name='delete_article'),
+
 ]

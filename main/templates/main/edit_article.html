@@ -29,10 +29,33 @@
                placeholder="Добавьте свои теги через запятую"
                value="{{tg}}"/>
     </div>
+    <div class="two-buttons-div">
+        <div>
+            <button class="btn btn-outline-success" type="submit">Обновить и отправить статью на проверку</button>
 
+        </div>
 
-    <button class="btn btn-outline-success" type="submit">Обновить и отправить статью на проверку</button>
+        <div>
+            <a href="{% url 'delete_article_check' article.id %}"
+               class="btn btn-outline-danger">
+                Удалить
+            </a>
+
+        </div>
+
+        <div>
+            <a href="{% url 'my_articles'  %}"
+               class="btn btn-outline-success">
+                Назад
+            </a>
+
+        </div>
+
+    </div>
+
 
 </form>
 
+
 {% endblock %}
+

@@ -144,10 +144,16 @@ def edit_article_view(request, pk):
                 article.status = False
 
                 article.save()
-                for tag in newtags[:5]:
-                    tag, created = Tag.objects.get_or_create(name_of_tag=tag)
-                    article.tag.add(tag)
-                messages.success(request, 'ваша статья обновлена и отправлена на проверку')
+
+                if newtags:
+                    for tag in article.tag.all():
+                        tag.delete()
+
+                if newtags:
+                    for tag in newtags[:5]:
+                        tag, created = Tag.objects.get_or_create(name_of_tag=tag)
+                        article.tag.add(tag)
+                    messages.success(request, 'ваша статья обновлена и отправлена на проверку')
 
                 return redirect('main')
         else:
@@ -158,3 +164,19 @@ def edit_article_view(request, pk):
 
             context = {'form': form, 'article': article, 'tg': tg}
             return render(request, 'main/edit_article.html', context)
+
+
+def delete_article_check_view(request, pk):
+    article = Article.objects.get(id=pk)
+    context = {'article': article}
+    messages.error(request, f'Вы точно хотите удалить {article}?')
+
+    return render(request, 'main/delete_article_check.html', context)
+
+
+def delete_article_view(request, pk):
+    article = Article.objects.get(id=pk)
+    article.delete()
+    messages.error(request, 'Статья успешно удалена')
+
+    return redirect('main')

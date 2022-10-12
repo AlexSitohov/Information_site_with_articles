@@ -19,10 +19,21 @@
         <label>Теги</label>
         <input class="form-control" type="text" name="newtags" placeholder="Добавьте свои теги через запятую"/>
     </div>
+    <div class="two-buttons-div">
+        <div>
+            <button class="btn btn-outline-success" type="submit">Отправить статью на проверку</button>
+
+        </div>
 
 
-    <button class="btn btn-outline-success" type="submit">Отправить статью на проверку</button>
+        <div>
+            <a href="{% url 'main'  %}"
+               class="btn btn-outline-success">
+                Назад
+            </a>
 
+        </div>
+    </div>
 </form>
 
 {% endblock %}
