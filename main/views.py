@@ -168,15 +168,28 @@ def edit_article_view(request, pk):
 
 def delete_article_check_view(request, pk):
     article = Article.objects.get(id=pk)
-    context = {'article': article}
-    messages.error(request, f'Вы точно хотите удалить {article}?')
+    if article.author == request.user:
+        context = {'article': article}
+        messages.error(request, f'Вы точно хотите удалить {article}?')
 
-    return render(request, 'main/delete_article_check.html', context)
+        return render(request, 'main/delete_article_check.html', context)
 
 
 def delete_article_view(request, pk):
     article = Article.objects.get(id=pk)
-    article.delete()
-    messages.error(request, 'Статья успешно удалена')
+    if article.author == request.user:
+        article.delete()
+        messages.error(request, 'Статья успешно удалена')
 
-    return redirect('main')
+        return redirect('main')
+
+
+def author_view(request, pk):
+    author = User.objects.get(id=pk)
+    articles_list = Article.objects.filter(status=True, author=pk).order_by('-date')
+    paginator = Paginator(articles_list, 10)
+    page_number = request.GET.get('page')
+    articles = paginator.get_page(page_number)
+    messages.success(request, f'вы читаете статьи автора {author}')
+    context = {'articles': articles}
+    return render(request, 'main/author.html', context)

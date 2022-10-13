@@ -53,7 +53,8 @@
                             {{article.date|date:"d.n.y в H:i"}}
                         </div>
                         <div class="author-div">
-                            By {{article.author}}
+
+                            <a class="navbar-brand" style="color: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;" href="{% url 'author' article.author.id %}">By {{article.author}}</a>
                         </div>
 
 
