@@ -45,7 +45,7 @@ def main_view(request):
         context = {'articles': articles, 'search_articles': search_articles}
         return render(request, 'main/main.html', context)
     else:
-        articles_list = Article.objects.filter(status=True, ).order_by('-date').select_related('author')
+        articles_list = Article.objects.filter(status=True, ).prefetch_related('tag').order_by('-date').select_related('author')
         paginator = Paginator(articles_list, 10)
 
         page_number = request.GET.get('page')
@@ -56,7 +56,7 @@ def main_view(request):
 
 @query_debugger
 def article_view(request, pk):
-    article = Article.objects.select_related('author').get(id=pk)
+    article = Article.objects.select_related('author').prefetch_related('tag').get(id=pk)
     if article.status:
         comments = Comment.objects.select_related('comment_author').filter(article=article)
         if request.method == 'POST':
@@ -149,7 +149,7 @@ def new_article_view(request):
 
 @query_debugger
 def my_articles_view(request):
-    articles_list = Article.objects.select_related('author').filter(author=request.user).order_by('-status', '-date')
+    articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(author=request.user).order_by('-status', '-date')
     paginator = Paginator(articles_list, 10)
 
     page_number = request.GET.get('page')
@@ -215,7 +215,7 @@ def delete_article_view(request, pk):
 @query_debugger
 def author_view(request, slug_name):
     author = User.objects.get(username=slug_name)
-    articles_list = Article.objects.select_related('author').filter(status=True, author__username=slug_name).order_by(
+    articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(status=True, author__username=slug_name).order_by(
         '-date')
     paginator = Paginator(articles_list, 10)
     page_number = request.GET.get('page')
