@@ -5,6 +5,7 @@
 
 
 <div class="wrapper">
+<!--            {{articles|length}}-->
     <div class="list">
 
 
@@ -54,7 +55,8 @@
                         </div>
                         <div class="author-div">
 
-                            <a class="navbar-brand" style="color: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;" href="{% url 'author' article.author.id %}">By {{article.author}}</a>
+                            <a class="navbar-brand" style="color: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;"
+                               href="{% url 'author' article.author.username %}">By {{article.author}}</a>
                         </div>
 
 

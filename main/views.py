@@ -3,15 +3,41 @@ from django.contrib.auth import login, logout
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.db import connection, reset_queries
+import time
+import functools
 
 from main.forms import *
 from main.models import *
 
 
+def query_debugger(func):
+    @functools.wraps(func)
+    def inner_func(*args, **kwargs):
+        reset_queries()
+
+        start_queries = len(connection.queries)
+
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        end = time.perf_counter()
+
+        end_queries = len(connection.queries)
+
+        print(f"Function : {func.__name__}")
+        print(f"Number of Queries : {end_queries - start_queries}")
+        print(f"Finished in : {(end - start):.2f}s")
+        return result
+
+    return inner_func
+
+
+@query_debugger
 def main_view(request):
     if request.method == 'GET' and request.GET.get('search'):
         data = request.GET
-        articles_list = Article.objects.filter(status=True, title__icontains=data.get('search')).order_by('-date')
+        articles_list = Article.objects.filter(status=True, title__icontains=data.get('search')).order_by(
+            '-date').select_related('author')
         paginator = Paginator(articles_list, 10)
         search_articles = request.GET.get('search')
         page_number = request.GET.get('page')
@@ -19,7 +45,7 @@ def main_view(request):
         context = {'articles': articles, 'search_articles': search_articles}
         return render(request, 'main/main.html', context)
     else:
-        articles_list = Article.objects.filter(status=True, ).order_by('-date')
+        articles_list = Article.objects.filter(status=True, ).order_by('-date').select_related('author')
         paginator = Paginator(articles_list, 10)
 
         page_number = request.GET.get('page')
@@ -28,10 +54,11 @@ def main_view(request):
         return render(request, 'main/main.html', context)
 
 
+@query_debugger
 def article_view(request, pk):
-    article = Article.objects.get(id=pk)
+    article = Article.objects.select_related('author').get(id=pk)
     if article.status:
-        comments = Comment.objects.filter(article=article)
+        comments = Comment.objects.select_related('comment_author').filter(article=article)
         if request.method == 'POST':
             data = request.POST
             comment = Comment.objects.create(
@@ -120,8 +147,9 @@ def new_article_view(request):
         return render(request, 'main/new_article.html', context)
 
 
+@query_debugger
 def my_articles_view(request):
-    articles_list = Article.objects.filter(author=request.user).order_by('-status', '-date')
+    articles_list = Article.objects.select_related('author').filter(author=request.user).order_by('-status', '-date')
     paginator = Paginator(articles_list, 10)
 
     page_number = request.GET.get('page')
@@ -184,9 +212,11 @@ def delete_article_view(request, pk):
         return redirect('main')
 
 
-def author_view(request, pk):
-    author = User.objects.get(id=pk)
-    articles_list = Article.objects.filter(status=True, author=pk).order_by('-date')
+@query_debugger
+def author_view(request, slug_name):
+    author = User.objects.get(username=slug_name)
+    articles_list = Article.objects.select_related('author').filter(status=True, author__username=slug_name).order_by(
+        '-date')
     paginator = Paginator(articles_list, 10)
     page_number = request.GET.get('page')
     articles = paginator.get_page(page_number)
