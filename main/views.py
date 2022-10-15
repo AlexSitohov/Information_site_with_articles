@@ -115,7 +115,7 @@ def new_article_view(request):
                                              text=form.cleaned_data['text'],
                                              image=form.cleaned_data['image'],
                                              author=request.user,
-                                             status=False)
+                                             status=True)
 
             article.save()
             for tag in newtags[:5]:
