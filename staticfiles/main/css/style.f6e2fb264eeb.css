@@ -1,0 +1,298 @@
+/* --------------- reset.css --------------- */
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, em, img, strong, sub, sup, b, u, i,  dl, dt, dd, ol, ul, li, fieldset, form, label, table, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;                               /* обнуляем отступы и убираем бордюры */
+	vertical-align: baseline;          /* приводим все к одной базовой линии */
+	background: transparent;      /* чтобы не проскакивали левые фоны, установленные по умолчанию */
+	font-size: 100%;                     /* размер шрифта всем одинаковый */
+}
+a {                                      	     /* ссылка не в общем списке чтобы не сбрасывать outline по умолчанию */
+	margin:0;
+	padding:0;
+	font-size:100%;
+	vertical-align:baseline;
+	background:transparent;
+	outline:none;
+}
+table {						/* устраняем отступы между ячейками таблицы */
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+td, td img {
+	vertical-align: top;			/* возвращаем привычное вертикальное выравнивание */
+}
+input, select, button, textarea {
+	margin: 0; 				/* убираем отступы по умолчанию для элементов форм (в частности для checkbox и radio) */
+	font-size: 100%; 			/* делаем размер шрифтов везде одинаковым */
+	outline: none;
+}
+input[type="text"], input[type="password"], textarea {
+	padding: 0; 				/* убираем внутренние отступы для текстовых полей */
+}
+input[type="checkbox"] { 		/* вертикальное выравнивание чекбоксов и радиобатонов относительно меток */
+	vertical-align: bottom;
+}
+input[type="radio"] {
+	vertical-align: text-bottom;
+}
+sub {
+	vertical-align: sub;
+	font-size: smaller;
+}
+sup {
+	vertical-align: super;
+	font-size: smaller;
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display:block;
+}
+nav ul {
+	 list-style:none;
+}
+/* --------------- /reset.css --------------- */
+
+/* --------------- базовые настройки ---------*/
+html {
+	min-height:100%; /* всегда показываем вертикальную полосу прокрутки  */
+}
+body {
+	color: #000;
+	text-align: left;
+	font-size: 1em; /* используем безопасные шрифтовые CSS стеки */
+	min-height:100%;
+}
+a, a:visited { /* порядок правил для ссылок имеет значение */
+
+
+	text-decoration: underline;
+}
+a:hover {
+	color: #fdf208;
+	text-decoration:none;
+}
+a:focus, a:active {
+
+
+}
+h1, h2, h3, h4, h5, h6{
+	font-weight:normal;
+}
+img{
+
+	max-width:100%;
+}
+.clr{
+	clear:both;
+}
+.clearfix:after {
+    clear: both;
+    content: "";
+    display: table;
+}
+/* --------------- /базовые настройки ---------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.main-div {
+    margin: 80px 0 0 0;
+}
+
+.wrapper {
+    /*display: grid;*/
+    /*grid-template-columns: 1fr 1fr 1fr;*/
+}
+
+.list {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+
+
+.item {
+    min-height: 300px;
+    max-height: 700px;
+    /*text-align: center;*/
+    font-size: 1.1em;
+    padding: 1.3em;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+  }
+
+.item h2,h1 {
+    text-align: center;
+    font-size:40px;
+}
+.card .btn-outline-success {
+
+}
+
+.card-img-top {
+    overflow: hidden;
+    object-fit: contain;
+}
+
+.article-wrapper {
+    max-width:1000px;
+    width: 100%;
+    margin: 0px auto 0 auto;
+    padding: 20px;
+    padding-top: 0;
+
+}
+
+.form_create{
+    width: 700px;
+    margin: 20px auto 20px auto;
+}
+
+.form_create p {
+    margin-bottom: 15px;
+}
+
+.form__field {
+    margin-bottom: 15px;
+
+}
+
+@media (min-width: 2400px) {
+    .list{
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        justify-content: center;
+    }
+}
+
+
+@media (max-width: 1250px) {
+    .list{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .list {
+        grid-template-columns: 320px;
+        justify-content: center;
+    }
+
+    .item {
+        max-width: 320px;
+    }
+}
+
+
+
+
+
+input{
+    height:40px;
+}
+
+
+.article-nav {
+    margin: 10px 0 5px 0;
+    display:flex;
+    justify-content: space-around;
+    font-size:20px;
+    align-items: center
+}
+
+
+.card .article-nav {
+    margin-bottom:10px;
+}
+
+
+.comments {
+    margin-top:20px;
+}
+
+.comments p {
+    margin-bottom:10px;
+}
+
+
+.form-comment{
+    margin-top:20px;
+    padding-bottom:100px;
+}
+
+
+.offcanvas-body {
+    padding-top:0;
+}
+
+
+.tag-div {
+    margin: 5px 0 5px 0;
+    display:flex;
+    justify-content: space-around;
+    font-size:20px;
+
+}
+
+
+.pagination-div {
+    display:flex;
+    justify-content: space-around;
+    margin:0 auto 50px auto;
+}
+
+
+.card-body {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+
+.navbar a{
+    color: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;
+}
+
+
+.bg-light {
+    background-color: RGBA(255,255,255,0.8)!important;
+}
+
+.alert-warning {
+    --bs-alert-color: RGBA(255,255,255,0.8)!important;
+    --bs-alert-bg: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;
+    --bs-alert-border-color: RGBA(255,255,255)!important;
+}
+
+.alert {
+    width:500px;
+
+}
+.alert-wrapper {
+    display:flex;
+    justify-content: space-around;
+}
+
+
+.two-buttons-div {
+    display:flex;
+    justify-content: space-between;
+}
