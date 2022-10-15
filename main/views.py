@@ -3,36 +3,14 @@ from django.contrib.auth import login, logout
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.db import connection, reset_queries
-import time
-import functools
+
+from django.views.decorators.csrf import csrf_exempt
 
 from main.forms import *
 from main.models import *
 
 
-def query_debugger(func):
-    @functools.wraps(func)
-    def inner_func(*args, **kwargs):
-        reset_queries()
-
-        start_queries = len(connection.queries)
-
-        start = time.perf_counter()
-        result = func(*args, **kwargs)
-        end = time.perf_counter()
-
-        end_queries = len(connection.queries)
-
-        print(f"Function : {func.__name__}")
-        print(f"Number of Queries : {end_queries - start_queries}")
-        print(f"Finished in : {(end - start):.2f}s")
-        return result
-
-    return inner_func
-
-
-@query_debugger
+@csrf_exempt
 def main_view(request):
     if request.method == 'GET' and request.GET.get('search'):
         data = request.GET
@@ -45,7 +23,8 @@ def main_view(request):
         context = {'articles': articles, 'search_articles': search_articles}
         return render(request, 'main/main.html', context)
     else:
-        articles_list = Article.objects.filter(status=True, ).prefetch_related('tag').order_by('-date').select_related('author')
+        articles_list = Article.objects.filter(status=True, ).prefetch_related('tag').order_by('-date').select_related(
+            'author')
         paginator = Paginator(articles_list, 10)
 
         page_number = request.GET.get('page')
@@ -54,7 +33,7 @@ def main_view(request):
         return render(request, 'main/main.html', context)
 
 
-@query_debugger
+@csrf_exempt
 def article_view(request, pk):
     article = Article.objects.select_related('author').prefetch_related('tag').get(id=pk)
     if article.status:
@@ -76,6 +55,7 @@ def article_view(request, pk):
         return HttpResponse('Статья еще не прошла проверку...')
 
 
+@csrf_exempt
 def registration_view(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -94,6 +74,7 @@ def registration_view(request):
     return render(request, 'main/registration.html', context)
 
 
+@csrf_exempt
 def login_view(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -113,12 +94,14 @@ def login_view(request):
         return HttpResponse('Вы уже вошли')
 
 
+@csrf_exempt
 def logout_view(request):
     if request.user.is_authenticated:
         logout(request)
         return redirect('main')
 
 
+@csrf_exempt
 def new_article_view(request):
     if request.method == 'POST':
         newtags = request.POST.get('newtags').split(',')
@@ -147,9 +130,10 @@ def new_article_view(request):
         return render(request, 'main/new_article.html', context)
 
 
-@query_debugger
+@csrf_exempt
 def my_articles_view(request):
-    articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(author=request.user).order_by('-status', '-date')
+    articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(
+        author=request.user).order_by('-status', '-date')
     paginator = Paginator(articles_list, 10)
 
     page_number = request.GET.get('page')
@@ -158,6 +142,7 @@ def my_articles_view(request):
     return render(request, 'main/my_articles.html', context)
 
 
+@csrf_exempt
 def edit_article_view(request, pk):
     article = Article.objects.get(id=pk)
     if article.author == request.user:
@@ -194,6 +179,7 @@ def edit_article_view(request, pk):
             return render(request, 'main/edit_article.html', context)
 
 
+@csrf_exempt
 def delete_article_check_view(request, pk):
     article = Article.objects.get(id=pk)
     if article.author == request.user:
@@ -203,6 +189,7 @@ def delete_article_check_view(request, pk):
         return render(request, 'main/delete_article_check.html', context)
 
 
+@csrf_exempt
 def delete_article_view(request, pk):
     article = Article.objects.get(id=pk)
     if article.author == request.user:
@@ -212,10 +199,11 @@ def delete_article_view(request, pk):
         return redirect('main')
 
 
-@query_debugger
+@csrf_exempt
 def author_view(request, slug_name):
     author = User.objects.get(username=slug_name)
-    articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(status=True, author__username=slug_name).order_by(
+    articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(status=True,
+                                                                                            author__username=slug_name).order_by(
         '-date')
     paginator = Paginator(articles_list, 10)
     page_number = request.GET.get('page')
