@@ -191,12 +191,12 @@ img{
 
 @media (max-width: 600px) {
     .list {
-        grid-template-columns: 320px;
+        grid-template-columns: 350px;
         justify-content: center;
     }
 
     .item {
-        max-width: 320px;
+        max-width: 350px;
     }
 }
 
