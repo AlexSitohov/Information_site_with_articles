@@ -13,3 +13,8 @@ class ArticleAdmin(ModelAdmin):
 @register(Tag)
 class TagAdmin(ModelAdmin):
     pass
+
+
+@register(Comment)
+class CommentAdmin(ModelAdmin):
+    pass

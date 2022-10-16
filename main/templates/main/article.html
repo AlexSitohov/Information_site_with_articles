@@ -2,67 +2,140 @@
 
 
 {% block content %}
+<div style="margin-bottom:100px;" class="super-outer">
+    <div class="item">
+        <div class="article-wrapper">
+            <h1 style="font-size:40px;">{{article.title}}</h1>
+            <div class="article-nav">
+                <div class="date-div">
+                    {{article.date|date:"d.n.y в H:i"}}
+                </div>
+                <div class="author-div">
+                    By {{article.author}}
+                </div>
+                {% if article.tag.all %}
+                <div>
 
-<div class="item">
-    <div class="article-wrapper">
-        <h1 style="font-size:40px;">{{article.title}}</h1>
-        <div class="article-nav">
-            <div class="date-div">
-                {{article.date|date:"d.n.y в H:i"}}
+
+                    {% for tg in article.tag.all %}
+
+                    <small>
+                        <span class="badge text-bg-success">{{tg}}</span>
+                    </small>
+
+                    {% endfor %}
+
+
+                </div>
+                {% endif %}
+
+
             </div>
-            <div class="author-div">
-                By {{article.author}}
-            </div>
-            {% if article.tag.all %}
-            <div>
+            <img src="{{ article.image.url }}" class="card-img-top" alt="...">
+            <p style="margin-top:15px;">
+                {{article.text}}
 
+            </p>
 
-                {% for tg in article.tag.all %}
-
-                <small>
-                    <span class="badge text-bg-success">{{tg}}</span>
-                </small>
-
+            <div class="comments">
+                <p style="margin-top:10px; font-size:20px;">
+                    Комментарии:
+                </p>
+                {% for comment in comments %}
+                <p>
+                    <b>{{comment.comment_author}} </b> {{comment.date|date:"d.n.y в H:i"}} <br> {{comment}}
+                </p>
                 {% endfor %}
-
-
             </div>
+
+
+            {% if user.is_authenticated %}
+
+            <form method="post" class="form-comment">
+                {% csrf_token %}
+                <input style="margin-bottom:10px;" class="form-control" type="text" name="text_of_comment"
+                       placeholder="Ваш комментарий">
+                <button class="btn btn-outline-success" type="submit">Комментировать</button>
+            </form>
+
+
             {% endif %}
 
+            <div class="wrapper">
+                <h2 style="">Также от этого автора </h2>
+
+                <div style="justify-content: center" class="list">
+
+
+                    {% for article in articles_from_same_author %}
+
+
+                    <div class="item">
+                        <div class="card" style="width: 35rem;">
+                            <img src="{{ article.image.url }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <div class="tags-title-text-div">
+                                    <h2>{{article.title}}</h2>
+
+
+                                    <div class="tag-div">
+
+                                        {% for tg in article.tag.all %}
+                                        <div class="tag-wrapper">
+                                            <small>
+                                                <span class="badge text-bg-success">{{tg}}</span>
+
+                                            </small>
+                                        </div>
+
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                    <div class="article-text-main">
+                                        {{article.text | truncatewords:30}}
+                                    </div>
+
+
+                                </div>
+
+
+                                <div class="article-nav">
+                                    <div class="button-article-main">
+                                        <a href="{% url 'article' article.id %}"
+                                           class="btn btn-outline-success">
+                                            Читать
+                                        </a>
+                                    </div>
+                                    <div class="date-div">
+                                        {{article.date|date:"d.n.y в H:i"}}
+                                    </div>
+                                    <div class="author-div">
+
+                                        <a class="navbar-brand"
+                                           style="color: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;"
+                                           href="{% url 'author' article.author.username %}">By {{article.author}}</a>
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
 
         </div>
-        <img src="{{ article.image.url }}" class="card-img-top" alt="...">
-        <p style="margin-top:15px;">
-            {{article.text}}
-
-        </p>
-
-        <div class="comments">
-            <p style="margin-top:10px; font-size:20px;">
-                Комментарии:
-            </p>
-            {% for comment in comments %}
-            <p>
-                <b>{{comment.comment_author}} </b> {{comment.date|date:"d.n.y в H:i"}} <br> {{comment}}
-            </p>
-            {% endfor %}
-        </div>
-
-
-        {% if user.is_authenticated %}
-
-        <form method="post" class="form-comment">
-            {% csrf_token %}
-            <input style="margin-bottom:10px;" class="form-control" type="text" name="text_of_comment"
-                   placeholder="Ваш комментарий">
-            <button class="btn btn-outline-success" type="submit">Комментировать</button>
-        </form>
-
-
-        {% endif %}
 
     </div>
 
+
 </div>
+
 
 {% endblock %}

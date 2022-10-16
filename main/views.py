@@ -49,7 +49,9 @@ def article_view(request, pk):
             return redirect('article', article.pk)
         else:
             form = CommentForm()
-            context = {'article': article, 'comments': comments, 'form': form}
+            articles_from_same_author = Article.objects.filter(author=article.author).exclude(id=pk).order_by("?")[0:5]
+            context = {'article': article, 'comments': comments, 'form': form,
+                       'articles_from_same_author': articles_from_same_author}
         return render(request, 'main/article.html', context)
     else:
         return HttpResponse('Статья еще не прошла проверку...')
