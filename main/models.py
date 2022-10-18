@@ -11,6 +11,8 @@ class Article(Model):
     date = DateTimeField(auto_now_add=True, verbose_name='Дата написания статьи')
     status = BooleanField(default=False, verbose_name='Статус статьи')
     tag = ManyToManyField('Tag', verbose_name='Теги', null=True, blank=True)
+    likes = ManyToManyField(User,related_name='likes_posts', verbose_name='Лайки')
+    in_favorite = ManyToManyField(User,related_name='favorite_posts', verbose_name='Избранные статьи у пользователей')
 
     def __str__(self):
         return self.title

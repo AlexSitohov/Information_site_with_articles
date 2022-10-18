@@ -1,0 +1,74 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+<div class="wrapper">
+<!--            {{articles|length}}-->
+    <div class="list">
+
+
+        {% for article in articles %}
+
+
+        <div class="item">
+            <div class="card" style="width: 35rem;">
+                <img src="{{ article.image.url }}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <div class="tags-title-text-div">
+                        <h2>{{article.title}}</h2>
+
+
+                        <div class="tag-div">
+
+                            {% for tg in article.tag.all %}
+                            <div class="tag-wrapper">
+                                <small>
+                                    <span class="badge text-bg-success">{{tg}}</span>
+
+                                </small>
+                            </div>
+
+
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="article-text-main">
+                            {{article.text | truncatewords:30}}
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="article-nav">
+                        <div class="button-article-main">
+                            <a href="{% url 'article' article.id %}"
+                               class="btn btn-outline-success">
+                                Читать
+                            </a>
+                        </div>
+                        <div class="date-div">
+                            {{article.date|date:"d.n.y в H:i"}}
+                        </div>
+                        <div class="author-div">
+
+                            <a class="navbar-brand" style="color: RGBA(25,135,84,var(--bs-bg-opacity,1))!important;"
+                               href="{% url 'author' article.author.username %}">By {{article.author}}</a>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

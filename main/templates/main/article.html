@@ -37,6 +37,55 @@
 
             </p>
 
+            likes: {{article.likes.count}}
+            <div class="likes-favorite">
+                <div>
+                    {% if user.is_authenticated %}
+                    {% if liked %}
+                    <form action="{% url 'like_article' article.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger" type="submit" name="article.id" value="{{article.id}}">
+                            unLike
+                        </button>
+                    </form>
+
+                    {% else %}
+                    <form action="{% url 'like_article' article.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-success" type="submit" name="article.id" value="{{article.id}}">
+                            Like
+                        </button>
+                    </form>
+
+                    {% endif %}
+
+                    {% endif %}
+                </div>
+                <div>
+                    {% if user.is_authenticated %}
+                    {% if in_favorite %}
+                    <form action="{% url 'add_to_fav_article' article.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger" type="submit" name="article.id" value="{{article.id}}">
+                            Удалить из избранного
+                        </button>
+                    </form>
+
+                    {% else %}
+                    <form action="{% url 'add_to_fav_article' article.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-success" type="submit" name="article.id" value="{{article.id}}">
+                            Добавить в избранное
+                        </button>
+                    </form>
+
+                    {% endif %}
+
+                    {% endif %}
+                </div>
+            </div>
+
+
             <div class="comments">
                 <p style="margin-top:10px; font-size:20px;">
                     Комментарии:
@@ -50,6 +99,7 @@
 
 
             {% if user.is_authenticated %}
+
 
             <form method="post" class="form-comment">
                 {% csrf_token %}

@@ -1,18 +1,17 @@
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.contrib.auth import login, logout
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-
-from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
 
 from main.forms import *
 from main.models import *
 
 
-@csrf_exempt
 def main_view(request):
     if request.method == 'GET' and request.GET.get('search'):
+
         data = request.GET
         articles_list = Article.objects.filter(status=True, title__icontains=data.get('search')).order_by(
             '-date').select_related('author')
@@ -33,12 +32,19 @@ def main_view(request):
         return render(request, 'main/main.html', context)
 
 
-@csrf_exempt
 def article_view(request, pk):
     article = Article.objects.select_related('author').prefetch_related('tag').get(id=pk)
+    comments = Comment.objects.select_related('comment_author').filter(article=article)
+    liked = False
+    in_favorite = False
+    if article.likes.filter(id=request.user.id).exists():
+        liked = True
+    if article.in_favorite.filter(id=request.user.id).exists():
+        in_favorite = True
+
     if article.status:
-        comments = Comment.objects.select_related('comment_author').filter(article=article)
-        if request.method == 'POST':
+
+        if request.method == 'POST' and request.POST.get('text_of_comment'):
             data = request.POST
             comment = Comment.objects.create(
                 text_of_comment=data.get('text_of_comment'),
@@ -47,17 +53,22 @@ def article_view(request, pk):
             )
             comment.save()
             return redirect('article', article.pk)
+
+
+
         else:
             form = CommentForm()
-            articles_from_same_author = Article.objects.filter(author=article.author).exclude(id=pk).order_by("?")[0:5]
+            articles_from_same_author = Article.objects.select_related('author').prefetch_related('tag').filter(
+                author=article.author).exclude(id=pk).order_by("?")[0:4]
             context = {'article': article, 'comments': comments, 'form': form,
-                       'articles_from_same_author': articles_from_same_author}
+                       'articles_from_same_author': articles_from_same_author,
+                       'liked': liked,
+                       'in_favorite': in_favorite}
         return render(request, 'main/article.html', context)
     else:
         return HttpResponse('Статья еще не прошла проверку...')
 
 
-@csrf_exempt
 def registration_view(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -76,7 +87,6 @@ def registration_view(request):
     return render(request, 'main/registration.html', context)
 
 
-@csrf_exempt
 def login_view(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -96,14 +106,12 @@ def login_view(request):
         return HttpResponse('Вы уже вошли')
 
 
-@csrf_exempt
 def logout_view(request):
     if request.user.is_authenticated:
         logout(request)
         return redirect('main')
 
 
-@csrf_exempt
 def new_article_view(request):
     if request.method == 'POST':
         newtags = request.POST.get('newtags').split(',')
@@ -132,7 +140,6 @@ def new_article_view(request):
         return render(request, 'main/new_article.html', context)
 
 
-@csrf_exempt
 def my_articles_view(request):
     articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(
         author=request.user).order_by('-status', '-date')
@@ -144,7 +151,6 @@ def my_articles_view(request):
     return render(request, 'main/my_articles.html', context)
 
 
-@csrf_exempt
 def edit_article_view(request, pk):
     article = Article.objects.get(id=pk)
     if article.author == request.user:
@@ -181,7 +187,6 @@ def edit_article_view(request, pk):
             return render(request, 'main/edit_article.html', context)
 
 
-@csrf_exempt
 def delete_article_check_view(request, pk):
     article = Article.objects.get(id=pk)
     if article.author == request.user:
@@ -191,7 +196,6 @@ def delete_article_check_view(request, pk):
         return render(request, 'main/delete_article_check.html', context)
 
 
-@csrf_exempt
 def delete_article_view(request, pk):
     article = Article.objects.get(id=pk)
     if article.author == request.user:
@@ -201,7 +205,6 @@ def delete_article_view(request, pk):
         return redirect('main')
 
 
-@csrf_exempt
 def author_view(request, slug_name):
     author = User.objects.get(username=slug_name)
     articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(status=True,
@@ -213,3 +216,35 @@ def author_view(request, slug_name):
     messages.success(request, f'вы читаете статьи автора {author}')
     context = {'articles': articles}
     return render(request, 'main/author.html', context)
+
+
+def like_article_view(request, pk):
+    article = Article.objects.get(id=pk)
+    liked = False
+    if article.likes.filter(id=request.user.id).exists():
+        article.likes.remove(request.user)
+        liked = False
+    else:
+        article.likes.add(request.user)
+        liked = True
+    return HttpResponseRedirect(reverse('article', args=[str(pk)]))
+
+
+def add_to_fav_article_view(request, pk):
+    article = Article.objects.get(id=pk)
+    in_favorite = False
+    if article.in_favorite.filter(id=request.user.id).exists():
+        article.in_favorite.remove(request.user)
+        in_favorite = False
+    else:
+        article.in_favorite.add(request.user)
+        in_favorite = True
+    return HttpResponseRedirect(reverse('article', args=[str(pk)]))
+
+
+def favorites_view(request):
+    articles = Article.objects.filter(in_favorite=request.user)
+    context = {
+        'articles': articles
+    }
+    return render(request, 'main/favorites.html', context)

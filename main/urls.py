@@ -14,4 +14,8 @@ urlpatterns = [
     path('delete_article_check/<int:pk>/', delete_article_check_view, name='delete_article_check'),
     path('delete_article/<int:pk>/', delete_article_view, name='delete_article'),
     path('author/<slug:slug_name>/', author_view, name='author'),
+    path('like_article/<int:pk>', like_article_view, name='like_article'),
+    path('add_to_fav_article/<int:pk>', add_to_fav_article_view, name='add_to_fav_article'),
+    path('favorites/', favorites_view, name='favorites'),
+
 ]
