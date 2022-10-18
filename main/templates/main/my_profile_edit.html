@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+<form class="form_create" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+        {{form.as_p}}
+    </p>
+    <button type="submit">Редактировать</button>
+    <p><a href="/my_profile/password/">Изменить пароль</a></p>
+</form>
+
+
+{% endblock %}

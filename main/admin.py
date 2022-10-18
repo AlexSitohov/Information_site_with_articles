@@ -18,3 +18,8 @@ class TagAdmin(ModelAdmin):
 @register(Comment)
 class CommentAdmin(ModelAdmin):
     pass
+
+
+@register(CustomUser)
+class CustomUserAdmin(ModelAdmin):
+    pass

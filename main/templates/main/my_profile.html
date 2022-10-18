@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+<a href="{% url 'my_profile_edit' my_profile.id %}">Редактировать</a>
+
+
+
+{{my_profile}}
+{% if my_profile.avatar %}
+<img src="{{my_profile.avatar.url}}" alt="">
+{% endif %}
+
+{% endblock %}

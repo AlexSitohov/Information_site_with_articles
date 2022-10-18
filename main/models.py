@@ -1,18 +1,26 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.db.models import *
+
+
+class CustomUser(AbstractUser):
+    avatar = ImageField('Аватар', null=True, blank=True,
+                        validators=[FileExtensionValidator(allowed_extensions=['jpg'])],
+                        )
 
 
 class Article(Model):
     title = CharField(max_length=50, verbose_name='Заголовок')
     text = TextField(verbose_name='Текст статьи')
-    author = ForeignKey(User, on_delete=CASCADE, verbose_name='Автор', null=True, blank=True)
+    author = ForeignKey(CustomUser, on_delete=CASCADE, verbose_name='Автор', null=True, blank=True)
     image = ImageField(verbose_name='Картинка')
     date = DateTimeField(auto_now_add=True, verbose_name='Дата написания статьи')
     status = BooleanField(default=False, verbose_name='Статус статьи')
     tag = ManyToManyField('Tag', verbose_name='Теги', null=True, blank=True)
-    likes = ManyToManyField(User,related_name='likes_posts', verbose_name='Лайки')
-    in_favorite = ManyToManyField(User,related_name='favorite_posts', verbose_name='Избранные статьи у пользователей')
+    likes = ManyToManyField(CustomUser, related_name='likes_posts', verbose_name='Лайки', null=True, blank=True)
+    in_favorite = ManyToManyField(CustomUser, related_name='favorite_posts',
+                                  verbose_name='Избранные статьи у пользователей', null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -36,7 +44,7 @@ class Tag(Model):
 class Comment(Model):
     text_of_comment = CharField(max_length=100, verbose_name='Комментарий')
     article = ForeignKey(Article, on_delete=CASCADE, verbose_name='Статья')
-    comment_author = ForeignKey(User, on_delete=CASCADE, verbose_name='Автор комментария')
+    comment_author = ForeignKey(CustomUser, on_delete=CASCADE, verbose_name='Автор комментария')
     date = DateTimeField(auto_now_add=True, verbose_name='Дата создания комментария')
 
     def __str__(self):

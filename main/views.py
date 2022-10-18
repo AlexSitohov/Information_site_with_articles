@@ -54,8 +54,6 @@ def article_view(request, pk):
             comment.save()
             return redirect('article', article.pk)
 
-
-
         else:
             form = CommentForm()
             articles_from_same_author = Article.objects.select_related('author').prefetch_related('tag').filter(
@@ -206,7 +204,7 @@ def delete_article_view(request, pk):
 
 
 def author_view(request, slug_name):
-    author = User.objects.get(username=slug_name)
+    author = CustomUser.objects.get(username=slug_name)
     articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(status=True,
                                                                                             author__username=slug_name).order_by(
         '-date')
@@ -243,8 +241,46 @@ def add_to_fav_article_view(request, pk):
 
 
 def favorites_view(request):
-    articles = Article.objects.filter(in_favorite=request.user)
+    articles_list = Article.objects.filter(in_favorite=request.user).select_related('author').prefetch_related('tag')
+    paginator = Paginator(articles_list, 10)
+    search_articles = request.GET.get('search')
+    page_number = request.GET.get('page')
+    articles = paginator.get_page(page_number)
     context = {
         'articles': articles
     }
     return render(request, 'main/favorites.html', context)
+
+
+def my_profile_view(request):
+    my_profile = CustomUser.objects.get(username=request.user.username)
+    context = {
+        'my_profile': my_profile
+    }
+    return render(request, 'main/my_profile.html', context)
+
+
+def my_profile_edit_view(request, pk):
+    user = CustomUser.objects.get(username=request.user.username)
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, request.FILES)
+        if form.is_valid():
+            user.username = form.cleaned_data.get('username')
+            user.email = form.cleaned_data.get('email')
+            user.avatar = form.cleaned_data.get('avatar')
+            user.save()
+        return redirect('my_profile')
+
+    else:
+        form = UserEditForm(initial={
+            'username': user.username,
+            'email': user.email,
+            'avatar': user.avatar}
+        )
+        context = {
+            'user': user,
+            'form': form
+        }
+        return render(request, 'main/my_profile_edit.html', context)
+
+

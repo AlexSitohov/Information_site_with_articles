@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm, PasswordChangeForm
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
@@ -12,7 +12,7 @@ class CreateUserForm(UserCreationForm):
     password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username', 'password1', 'password2')
 
 
@@ -39,3 +39,9 @@ class ArticleForm(ModelForm):
         widgets = {
             'tag': forms.CheckboxSelectMultiple(),
         }
+
+
+class UserEditForm(forms.Form):
+    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    avatar = forms.ImageField(label='Avatar', required=False)
