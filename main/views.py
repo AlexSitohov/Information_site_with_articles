@@ -35,12 +35,16 @@ def main_view(request):
 def article_view(request, pk):
     article = Article.objects.select_related('author').prefetch_related('tag').get(id=pk)
     comments = Comment.objects.select_related('comment_author').filter(article=article)
+    author = CustomUser.objects.get(username=article.author.username)
     liked = False
     in_favorite = False
+    sub = False
     if article.likes.filter(id=request.user.id).exists():
         liked = True
     if article.in_favorite.filter(id=request.user.id).exists():
         in_favorite = True
+    if author.subscribers.filter(id=request.user.id).exists():
+        sub = True
 
     if article.status:
 
@@ -61,7 +65,8 @@ def article_view(request, pk):
             context = {'article': article, 'comments': comments, 'form': form,
                        'articles_from_same_author': articles_from_same_author,
                        'liked': liked,
-                       'in_favorite': in_favorite}
+                       'in_favorite': in_favorite,
+                       'sub': sub}
         return render(request, 'main/article.html', context)
     else:
         return HttpResponse('Статья еще не прошла проверку...')
@@ -205,14 +210,16 @@ def delete_article_view(request, pk):
 
 def author_view(request, slug_name):
     author = CustomUser.objects.get(username=slug_name)
+    sub = False
+    if author.subscribers.filter(id=request.user.id).exists():
+        sub = True
     articles_list = Article.objects.select_related('author').prefetch_related('tag').filter(status=True,
                                                                                             author__username=slug_name).order_by(
         '-date')
     paginator = Paginator(articles_list, 10)
     page_number = request.GET.get('page')
     articles = paginator.get_page(page_number)
-    messages.success(request, f'вы читаете статьи автора {author}')
-    context = {'articles': articles}
+    context = {'articles': articles, 'author': author, 'sub': sub}
     return render(request, 'main/author.html', context)
 
 
@@ -284,3 +291,33 @@ def my_profile_edit_view(request, pk):
         return render(request, 'main/my_profile_edit.html', context)
 
 
+def subscribe_view(request, slug_name):
+    user = request.user
+    author = CustomUser.objects.get(username=slug_name)
+    sub = False
+    if author.subscribers.filter(id=request.user.id).exists():
+        author.subscribers.remove(request.user)
+        user.subscriptions.remove(author)
+        messages.success(request, f'вы отписались от {author}')
+
+        sub = False
+    else:
+        author.subscribers.add(request.user)
+        user.subscriptions.add(author)
+        messages.success(request, f'теперь вы подписаны на {author}')
+
+        sub = True
+
+    return HttpResponseRedirect(reverse('author', args=[str(slug_name)]))
+
+
+def my_subscriptions_view(request):
+    my_subscriptions_authors = CustomUser.objects.filter(subscribers=request.user)
+    context = {'my_subscriptions_authors': my_subscriptions_authors}
+    return render(request, 'main/my_subscriptions.html', context)
+
+
+def my_subscribers_view(request):
+    my_subscribers = CustomUser.objects.filter(subscriptions=request.user)
+    context = {'my_subscribers': my_subscribers}
+    return render(request, 'main/my_subscribers.html', context)

@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+{% for author in my_subscriptions_authors %}
+<a href="{% url 'author' author.username  %}">{{author}}</a>
+
+{% endfor %}
+
+
+{% endblock %}

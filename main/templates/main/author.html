@@ -2,9 +2,23 @@
 
 
 {% block content %}
+{% if user.is_authenticated %}
+<div>
+    <form action="{% url 'subscribe' author.username %}">
+        {% csrf_token %}
+
+        {% if sub %}
+        <button type="submit">Отписаться</button>
+        {% else %}
+        <button type="submit">Подписаться</button>
+        {% endif %}
 
 
+    </form>
+</div>
+{% endif %}
 <div class="wrapper">
+
     <div class="list">
 
 

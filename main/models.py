@@ -8,6 +8,10 @@ class CustomUser(AbstractUser):
     avatar = ImageField('Аватар', null=True, blank=True,
                         validators=[FileExtensionValidator(allowed_extensions=['jpg'])],
                         )
+    subscribers = ManyToManyField('CustomUser', related_name='subscribers_users', verbose_name='Подписчики',
+                                  blank=True)
+    subscriptions = ManyToManyField('CustomUser', related_name='subscriptions_users', verbose_name='Подписки',
+                                    blank=True)
 
 
 class Article(Model):

@@ -36,6 +36,13 @@
                     {% if user.is_authenticated %}
 
                     <li class="nav-item">
+                        <a class="navbar-brand" href="{% url 'my_subscribers' %}">Мои подписчики</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="{% url 'my_subscriptions' %}">Подписки</a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="navbar-brand" href="{% url 'my_profile' %}">Я</a>
                     </li>
                     <li class="nav-item">

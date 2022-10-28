@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+
+
+{% for sub in my_subscribers %}
+<a href="{% url 'author' sub.username  %}">{{sub}}</a>
+
+{% endfor %}
+
+
+{% endblock %}
