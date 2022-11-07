@@ -260,9 +260,26 @@ def favorites_view(request):
 
 
 def my_profile_view(request):
-    my_profile = CustomUser.objects.get(username=request.user.username)
+    user = CustomUser.objects.get(username=request.user.username)
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, request.FILES)
+        if form.is_valid():
+            user.username = form.cleaned_data.get('username')
+            user.email = form.cleaned_data.get('email')
+            user.avatar = form.cleaned_data.get('avatar')
+            user.save()
+        return redirect('my_profile')
+
+    else:
+        form = UserEditForm(initial={
+            'username': user.username,
+            'email': user.email,
+            'avatar': user.avatar}
+        )
     context = {
-        'my_profile': my_profile
+        'my_profile': user,
+        'user': user,
+        'form': form
     }
     return render(request, 'main/my_profile.html', context)
 

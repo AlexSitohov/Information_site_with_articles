@@ -4,13 +4,56 @@
 {% block content %}
 
 
-<a href="{% url 'my_profile_edit' my_profile.id %}">Редактировать</a>
+<!--<a href="{% url 'my_profile_edit' my_profile.id %}">Редактировать</a>-->
 
 
-
-{{my_profile}}
+<h1>{{my_profile}}</h1>
 {% if my_profile.avatar %}
 <img style="width:300px;" src="{{my_profile.avatar.url}}" alt="">
 {% endif %}
+<a href="#" class="popup-open">Редактировать</a>
 
+<div class="popup">
+    <div class="popup__edit">
+        <span class="popup__close"></span>
+        <form class="form_create" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>
+                {{form.as_p}}
+            </p>
+            <button type="submit">Редактировать</button>
+            <p><a href="/my_profile/password/">Изменить пароль</a></p>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    "use strict"
+
+let body = document.querySelector("body");
+let popup = document.querySelector(".popup");
+let popupForm = document.querySelector(".popup__edit");
+let popupOpen = document.querySelectorAll(".popup-open");
+let popupClose = document.querySelector(".popup__close");
+
+popupOpen.forEach(function (item) {
+    item.addEventListener("click", function (event) {
+        if (event.target.classList.contains("popup-open")) {
+            popup.classList.add("popup_active");
+            body.classList.add("body_lock");
+        }
+    });
+});
+
+popup.addEventListener("click", function (event) {
+    if (event.target.classList.contains("popup") || event.target.classList.contains("popup__close")) {
+        popup.classList.remove("popup_active");
+        setTimeout(function () {
+            body.classList.remove("body_lock");
+        }, 300);
+    }
+});
+
+console.log(body.offsetWidth + " " + body.clientWidth);
+</script>
 {% endblock %}
