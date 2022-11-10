@@ -1,11 +1,17 @@
 {% extends 'main/base.html' %}
+{% load author_tags %}
 
 
 {% block content %}
 
-
 <div class="wrapper">
-<!--            {{articles|length}}-->
+    {% load author_tags %}
+    {% get_author as authors %}
+    {% for author in authors %}
+    <a href="{% url 'author_filter' author.username %}">{{author}}</a>
+    {% endfor %}
+
+
     <div class="list">
 
 
@@ -70,6 +76,16 @@
 
     </div>
 </div>
+<form action="{% url 'filter_tag' %}" method="get">
+    {% get_tags as tags %}
+    {% for tag in tags %}
+    <label>{{tag}}</label>
+    <input type="checkbox" name="tag" value="{{tag.name_of_tag}}">
+
+    {% endfor %}
+    <button type="submit">фильтровать</button>
+
+</form>
 
 
 {% endblock %}

@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.generic import ListView
 
 from main.forms import *
 from main.models import *
@@ -30,6 +31,15 @@ def main_view(request):
         articles = paginator.get_page(page_number)
         context = {'articles': articles}
         return render(request, 'main/main.html', context)
+
+
+class AuthorFilterMain(ListView):
+    model = Article
+    template_name = 'main/main.html'
+    context_object_name = 'articles'
+
+    def get_queryset(self):
+        return Article.objects.filter(author__username=self.kwargs['username'])
 
 
 def article_view(request, pk):
@@ -117,7 +127,7 @@ def logout_view(request):
 
 def new_article_view(request):
     if request.method == 'POST':
-        newtags = request.POST.get('newtags').split(',')
+        newtags = request.POST.get('newtags').replace(' ', '').split(',')
         form = ArticleForm(request.POST, request.FILES)
         if form.is_valid():
             # article = form.save()
@@ -131,12 +141,13 @@ def new_article_view(request):
                                              status=False)
 
             article.save()
-            for tag in newtags[:5]:
-                tag, created = Tag.objects.get_or_create(name_of_tag=tag)
-                article.tag.add(tag)
-            messages.success(request, 'ваша статья отправлена на проверку')
+            if newtags != ' ':
+                for tag in newtags[:5]:
+                    tag, created = Tag.objects.get_or_create(name_of_tag=tag)
+                    article.tag.add(tag)
+                messages.success(request, 'ваша статья отправлена на проверку')
 
-            return redirect('main')
+                return redirect('main')
     else:
         form = ArticleForm()
         context = {'form': form}
@@ -338,3 +349,12 @@ def my_subscribers_view(request):
     my_subscribers = CustomUser.objects.filter(subscriptions=request.user)
     context = {'my_subscribers': my_subscribers}
     return render(request, 'main/my_subscribers.html', context)
+
+
+class FilterTagView(ListView):
+    template_name = 'main/main.html'
+    context_object_name = 'articles'
+
+    def get_queryset(self):
+        queryset = Article.objects.filter(tag__name_of_tag__in=self.request.GET.getlist('tag'),status=True)
+        return set(queryset)

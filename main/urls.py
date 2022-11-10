@@ -5,6 +5,7 @@ from main.views import *
 
 urlpatterns = [
     path('', main_view, name='main'),
+    path('author/<slug:username>', AuthorFilterMain.as_view(), name='author_filter'),
     path('article/<int:pk>/', article_view, name='article'),
     path('registration/', registration_view, name='registration'),
     path('login/', login_view, name='login'),
@@ -14,7 +15,7 @@ urlpatterns = [
     path('edit_article/<int:pk>/', edit_article_view, name='edit_article'),
     path('delete_article_check/<int:pk>/', delete_article_check_view, name='delete_article_check'),
     path('delete_article/<int:pk>/', delete_article_view, name='delete_article'),
-    path('author/<slug:slug_name>/', author_view, name='author'),
+    path('author_page/<slug:slug_name>/', author_view, name='author'),
     path('like_article/<int:pk>', like_article_view, name='like_article'),
     path('add_to_fav_article/<int:pk>', add_to_fav_article_view, name='add_to_fav_article'),
     path('favorites/', favorites_view, name='favorites'),
@@ -32,5 +33,6 @@ urlpatterns = [
     path('subscribe/<slug:slug_name>/', subscribe_view, name='subscribe'),
     path('my_subscriptions/', my_subscriptions_view, name='my_subscriptions'),
     path('my_subscribers/', my_subscribers_view, name='my_subscribers'),
+    path('filter_tag/', FilterTagView.as_view(), name='filter_tag')
 
 ]
