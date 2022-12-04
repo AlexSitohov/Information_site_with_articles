@@ -19,7 +19,7 @@ class Article(Model):
     text = TextField(verbose_name='Текст статьи')
     author = ForeignKey(CustomUser, related_name='articles', on_delete=CASCADE, verbose_name='Автор', null=True,
                         blank=True)
-    image = ImageField(verbose_name='Картинка', null=True, blank=True)
+    image = ImageField(verbose_name='Картинка')
     date = DateTimeField(auto_now_add=True, verbose_name='Дата написания статьи')
     status = BooleanField(default=False, verbose_name='Статус статьи')
     tag = ManyToManyField('Tag', verbose_name='Теги', null=True, blank=True)
