@@ -14,8 +14,10 @@ def main_view(request):
     if request.method == 'GET' and request.GET.get('search'):
 
         data = request.GET
-        articles_list = Article.objects.filter(status=True, title__icontains=data.get('search')).order_by(
-            '-date').select_related('author')
+        articles_list = list(Article.objects.filter(status=True, title__icontains=data.get('search')).order_by(
+            '-date').select_related('author')) or list(
+            Article.objects.filter(status=True, tag__name_of_tag__icontains=data.get('search')).order_by(
+                '-date').select_related('author'))
         paginator = Paginator(articles_list, 10)
         search_articles = request.GET.get('search')
         page_number = request.GET.get('page')
@@ -356,5 +358,5 @@ class FilterTagView(ListView):
     context_object_name = 'articles'
 
     def get_queryset(self):
-        queryset = Article.objects.filter(tag__name_of_tag__in=self.request.GET.getlist('tag'),status=True)
+        queryset = Article.objects.filter(tag__name_of_tag__in=self.request.GET.getlist('tag'), status=True)
         return set(queryset)

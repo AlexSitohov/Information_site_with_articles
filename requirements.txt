@@ -6,3 +6,7 @@ Pillow==9.2.0
 sqlparse==0.4.3
 tzdata==2022.4
 whitenoise==6.2.0
+
+djangorestframework~=3.14.0
+
+djangorestframework-simplejwt==5.2.2

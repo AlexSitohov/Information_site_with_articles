@@ -17,8 +17,9 @@ class CustomUser(AbstractUser):
 class Article(Model):
     title = CharField(max_length=50, verbose_name='Заголовок')
     text = TextField(verbose_name='Текст статьи')
-    author = ForeignKey(CustomUser, on_delete=CASCADE, verbose_name='Автор', null=True, blank=True)
-    image = ImageField(verbose_name='Картинка')
+    author = ForeignKey(CustomUser, related_name='articles', on_delete=CASCADE, verbose_name='Автор', null=True,
+                        blank=True)
+    image = ImageField(verbose_name='Картинка', null=True, blank=True)
     date = DateTimeField(auto_now_add=True, verbose_name='Дата написания статьи')
     status = BooleanField(default=False, verbose_name='Статус статьи')
     tag = ManyToManyField('Tag', verbose_name='Теги', null=True, blank=True)
