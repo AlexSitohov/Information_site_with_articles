@@ -10,7 +10,6 @@ from config import settings
 
 from .yasg import urlpatterns as doc_urls
 
-
 router = routers.SimpleRouter()
 router.register('articles', APIArticleView)
 router.register('users', APICustomUserView)
@@ -21,7 +20,7 @@ urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),
 
     path('api/v1/', include(router.urls)),
-    path('drf-auth',include('rest_framework.urls')),
+    path('drf-auth', include('rest_framework.urls')),
 
     # JWT auth
     path('api/v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
